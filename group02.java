@@ -50,12 +50,12 @@ public class group02 implements ContestSubmission
 		for(int j = 0; j < 3; j++){
 
 			//Valid checks if agents hasn't been chosen from population yet, as they have to be unique
-			int valid = 0;
-			while(valid == 0) {
+			boolean valid = false;
+			while(!valid) {
 				int newRand = rand.nextInt((10 - 0) + 1) + 0;
 				for (int k = 0; k < j; k++) {
 					if (newRand != randomAgents[j]) {
-						valid = 1;
+						valid = true;
 					}
 				}
 			}
