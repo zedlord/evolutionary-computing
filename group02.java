@@ -8,19 +8,19 @@ import java.util.Set;
 
 public class group02 implements ContestSubmission
 {
-	Random rnd_;
+	Random rand;
 	ContestEvaluation evaluation_;
     private int evaluations_limit_;
 
 	public group02()
 	{
-		rnd_ = new Random();
+		rand = new Random();
 	}
 
 	public void setSeed(long seed)
 	{
 		// Set seed of algortihms random process
-		rnd_.setSeed(seed);
+		rand.setSeed(seed);
 	}
 
 	public void setEvaluation(ContestEvaluation evaluation)
@@ -47,7 +47,7 @@ public class group02 implements ContestSubmission
     }
 
     private int[] chooseRandomAgents(int pSize, int agentExclude){
-		Random rand = new Random(); // use rnd_ instead? or set seed
+		// Random rand = new Random(); 
 		int[] randomAgents = new int[3];
 		Set<Integer> set = new HashSet<Integer>();
 
@@ -66,7 +66,8 @@ public class group02 implements ContestSubmission
 	public void run()
 	{
 		double[] fitnessArray = new double[10];
-		Random rand = new Random(); // use rnd_ instead? or set seed 
+		// Random rand = new Random();
+
 		double crossoverRate = 0.5;
 		double differentialRate = 1.0;
 		int populationSize = 10;
