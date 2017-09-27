@@ -46,14 +46,16 @@ public class group02 implements ContestSubmission
         }
     }
 
-    private int[] chooseRandomAgents(int pSize){
+    private int[] chooseRandomAgents(int pSize, int agentExclude){
 		Random rand = new Random(); // use rnd_ instead? or set seed
 		int[] randomAgents = new int[3];
 		Set<Integer> set = new HashSet<Integer>();
 
-		while (set.size() < 3){
+		set.add(agentExclude);
+		while (set.size() < 4){
 			set.add(rand.nextInt(pSize));
 		}
+		set.remove(agentExclude);
 
 		int i = 0;
 		for (Integer val : set) randomAgents[i++] = val;
@@ -86,8 +88,8 @@ public class group02 implements ContestSubmission
 			for(int i = 0; i < populationSize; i++){
 
 				//Create array to choose 3 random agents from the population
-				int[] randomAgents = chooseRandomAgents(populationSize);
-				int randomIndex = rand.nextInt(populationSize);
+				int[] randomAgents = chooseRandomAgents(populationSize, i);
+				int randomIndex = rand.nextInt(10);
 
 				// Compute new position of agent
 				for(int j = 0; j < 10; j++){
