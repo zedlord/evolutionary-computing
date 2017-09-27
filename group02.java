@@ -3,6 +3,8 @@ import org.vu.contest.ContestEvaluation;
 
 import java.util.Random;
 import java.util.Properties;
+import java.util.HashSet;
+import java.util.Set;
 
 public class group02 implements ContestSubmission
 {
@@ -44,54 +46,48 @@ public class group02 implements ContestSubmission
         }
     }
 
-    private int[] chooseRandomAgents(){
-		Random rand = new Random();
+    private int[] chooseRandomAgents(int pSize){
+		Random rand = new Random(); // use rnd_ instead? or set seed
 		int[] randomAgents = new int[3];
-		for(int j = 0; j < 3; j++){
+		Set<Integer> set = new HashSet<Integer>();
 
-			//Valid checks if agents hasn't been chosen from population yet, as they have to be unique
-			boolean valid = false;
-			while(!valid) {
-				int newRand = rand.nextInt((10 - 0) + 1) + 0;
-				for (int k = 0; k < j; k++) {
-					if (newRand != randomAgents[j]) {
-						valid = true;
-					}
-				}
-			}
+		while (set.size() < 3){
+			set.add(rand.nextInt(pSize));
 		}
+
+		int i = 0;
+		for (Integer val : set) randomAgents[i++] = val;
 
 		return randomAgents;
 	}
 
-
 	public void run()
 	{
 		double[] fitnessArray = new double[10];
-		Random rand = new Random();
+		Random rand = new Random(); // use rnd_ instead? or set seed 
 		double crossoverRate = 0.5;
 		double differentialRate = 1.0;
+		int populationSize = 10;
 		// Run your algorithm here
         int evals = 0;
         // init population
-		double[][] population = new double[10][10];
-		for(int i = 0; i < 10; i++){
+		double[][] population = new double[populationSize][10];
+		for(int i = 0; i < populationSize; i++){
 			for(int j = 0; j < 10; j++){
 				population[i][j] = -5 + (5 - -5) * rand.nextDouble();
-				System.out.println(population[i][j]);
 			}
 		}
 
         // calculate fitness
         while(evals<evaluations_limit_){
 
-			double[][] newPopulation = new double[10][10];
+			double[][] newPopulation = new double[populationSize][10];
 			//Loop through all agents
-			for(int i = 0; i < 10; i++){
+			for(int i = 0; i < populationSize; i++){
 
 				//Create array to choose 3 random agents from the population
-				int[] randomAgents = chooseRandomAgents();
-				int randomIndex = rand.nextInt((10 - 0) + 1) + 0;
+				int[] randomAgents = chooseRandomAgents(populationSize);
+				int randomIndex = rand.nextInt(populationSize);
 
 				// Compute new position of agent
 				for(int j = 0; j < 10; j++){
@@ -106,8 +102,10 @@ public class group02 implements ContestSubmission
 			}
 
 			//Eval new population
-			for(int i = 0; i < 10; i++){
+			for(int i = 0; i < populationSize; i++){
 				Double fitnessNew = (double) evaluation_.evaluate(newPopulation[i]);
+				evals++;
+
 				if(fitnessNew < fitnessArray[i]){
 					//Keep old agent
 					newPopulation[i] = population[i];
@@ -118,7 +116,6 @@ public class group02 implements ContestSubmission
 
 			population = newPopulation;
 
-            evals++;
             // Select survivors
         }
 
