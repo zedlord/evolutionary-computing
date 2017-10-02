@@ -47,7 +47,7 @@ public class group02 implements ContestSubmission
     }
 
     private int[] chooseRandomAgents(int pSize, int agentExclude){
-		// Random rand = new Random(); 
+		
 		int[] randomAgents = new int[3];
 		Set<Integer> set = new HashSet<Integer>();
 
@@ -65,12 +65,16 @@ public class group02 implements ContestSubmission
 
 	public void run()
 	{
-		double[] fitnessArray = new double[10];
-		// Random rand = new Random();
 
 		double crossoverRate = 0.5;
 		double differentialRate = 1.0;
 		int populationSize = 10;
+
+		double[] fitnessArray = new double[populationSize];
+	
+		System.out.println("populationSize: " + populationSize);
+		System.out.println("crossoverRate: " + differentialRate);
+		System.out.println("differentialRate: " + crossoverRate);
 		// Run your algorithm here
         int evals = 0;
         // init population
