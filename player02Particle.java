@@ -7,13 +7,13 @@ import java.util.Properties;
 import java.util.HashSet;
 import java.util.Set;
 
-public class group02pso implements ContestSubmission
+public class player02Particle implements ContestSubmission
 {
 	Random rand;
 	ContestEvaluation evaluation_;
     private int evaluations_limit_;
 
-	public group02pso()
+	public player02Particle()
 	{
 		rand = new Random();
 	}
@@ -56,6 +56,8 @@ public class group02pso implements ContestSubmission
 		double weightSocial = weightIndividual;
 		int populationSize = 20;
 		double velocityMax = 10;
+		String boundMethod = "mirror"; // mirror or loop
+		double friction = 0.5; // 0 < friction < 1
 
 		// Init population arrays
 		double[][] population = new double[populationSize][10];
@@ -73,6 +75,8 @@ public class group02pso implements ContestSubmission
 		System.out.println("weightSocial: " + weightSocial);
 		System.out.println("populationSize: " + populationSize);
 		System.out.println("velocityMax: " + velocityMax);
+		System.out.println("boundMethod: " + boundMethod);
+		System.out.println("friction: " + friction);
 
 		// Run your algorithm here
         int evals = 0;
@@ -93,6 +97,8 @@ public class group02pso implements ContestSubmission
 			}
 		}
 
+		double[] newGlobalBestPosition = globalBestPosition;
+
 		// init velocity
 		for(int i = 0; i < populationSize; i++){
 			for(int j = 0; j < 10; j++){
@@ -109,7 +115,7 @@ public class group02pso implements ContestSubmission
 				// Draw random components (vector wise?)
 				double uniDraw1 = rand.nextDouble();
 				double uniDraw2 = rand.nextDouble();
-
+				
 				for(int j = 0; j < 10; j++){
 
 					// compute new position and velocity
@@ -117,52 +123,40 @@ public class group02pso implements ContestSubmission
 					velocity[i][j] = Math.max(-velocityMax, Math.min(velocityMax, velocity[i][j]));
 					population[i][j] = population[i][j] + velocity[i][j];
 
-					// what if a member leaves the search space?
-					if(population[i][j] < -5){
-						population[i][j] = -5; // Nearest method
-						// population[i][j] = -5 + 10*rand.nextDouble();  // random 
-						 
-						// velocity[i][j] = 10*rand.nextDouble(); // random back method
-						// velocity[i][j] = -velocityMax + 2*velocityMax*rand.nextDouble(); // random
-						// velocity[i][j] = 0; // absorb method
-						velocity[i][j] = -.5*velocity[i][j]; // deterministic back method 
-					}
-					if(population[i][j] > 5){
-						population[i][j] = 5; // Nearest method
-						// population[i][j] = -5 + 10*rand.nextDouble(); // random
-						
-						// velocity[i][j] = -10*rand.nextDouble(); // random back method
-						// velocity[i][j] = -velocityMax + 2*velocityMax*rand.nextDouble(); // random
-						// velocity[i][j] = 0; // absorb method
-						velocity[i][j] = -.5*velocity[i][j]; // deterministic back method
-					}
+					// place agents within bounds
+					if(population[i][j] < -5 || population[i][j] > 5){
 
-					// System.out.println(population[i][j] + " " + velocity[i][j]);
-
+						if(boundMethod.equals("mirror")){
+							population[i][j] = -(((-population[i][j] + 15) % 10) - 5); 
+							velocity[i][j] = - friction * velocity[i][j]; 	
+						} else{
+							population[i][j] = ((population[i][j] + 15) % 10) - 5; 
+							velocity[i][j] = friction * velocity[i][j]; 
+						}
+					}
 				}
 
 				// evaluate new position
 				double newFitness = (double) evaluation_.evaluate(population[i]);
-				evals++;
-				
 
+				evals++;
+			
 				if (newFitness > personalBestFitness[i]){
-					personalBestFitness[i] = newFitness;
 					personalBestPosition[i] = population[i];
+					personalBestFitness[i] = newFitness;
 
 					if (newFitness > globalBestFitness){
+						newGlobalBestPosition = population[i];
 						globalBestFitness = newFitness;
-						globalBestPosition = population[i];
 					}
 				}
 
 				fitnessArray[i] = newFitness;
+
 			}
-			// System.out.print("[ ");
-			// for(int j = 0; j < 10; j++){
-			// 	System.out.print(globalBestPosition[j] + " ");
-			// }
-			// System.out.print("] \n");
+
+			globalBestPosition = newGlobalBestPosition;
+
     	}
 	}
 }
