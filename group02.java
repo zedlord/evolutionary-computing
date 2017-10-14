@@ -46,9 +46,9 @@ public class group02 implements ContestSubmission
         }
     }
 
-    private int[] chooseRandomAgents(int pSize, int agentExclude){
+    private int[] chooseRandomAgents(int pSize, int agentExclude, int pertubationSize){
 		
-		int[] randomAgents = new int[3];
+		int[] randomAgents = new int[2*pertubationSize + 1];
 		Set<Integer> set = new HashSet<Integer>();
 
 		set.add(agentExclude);
@@ -63,25 +63,44 @@ public class group02 implements ContestSubmission
 		return randomAgents;
 	}
 
+	private int returnBestAgent(double[] myArray){
+
+		// return argmax
+
+		int bestAgent = rand.nextInt(10);
+		for(int k = 0; k < myArray.length; k++){
+			if(myArray[k] > myArray[bestAgent]){
+				bestAgent = k;
+			}
+		}
+
+		return bestAgent;
+	}
+
 	public void run()
 	{
-
+		// parameters
 		double crossoverRate = 0.5;
-		double differentialRate = 1.0;
+		double differentialRate = 1;
 		int populationSize = 10;
+		int pertubationSize = 2; // in {1,2,..., populationSize/2 - 1}
+		String baseType = "rand"; // "best" or "rand"
 
-		double[] fitnessArray = new double[populationSize];
-	
 		System.out.println("populationSize: " + populationSize);
 		System.out.println("crossoverRate: " + differentialRate);
 		System.out.println("differentialRate: " + crossoverRate);
+		System.out.println("pertubationSize: " + pertubationSize);
+		System.out.println("baseType" + baseType);
+		
 		// Run your algorithm here
         int evals = 0;
+
         // init population
+		double[] fitnessArray = new double[populationSize];
 		double[][] population = new double[populationSize][10];
 		for(int i = 0; i < populationSize; i++){
 			for(int j = 0; j < 10; j++){
-				population[i][j] = -5 + (5 - -5) * rand.nextDouble();
+				population[i][j] = -5 + 10 * rand.nextDouble();
 			}
 		}
 
@@ -92,15 +111,25 @@ public class group02 implements ContestSubmission
 			//Loop through all agents
 			for(int i = 0; i < populationSize; i++){
 
-				//Create array to choose 3 random agents from the population
-				int[] randomAgents = chooseRandomAgents(populationSize, i);
+				//Create array to choose random agents from the population
+				int[] randomAgents = chooseRandomAgents(populationSize, i, pertubationSize);
 				int randomIndex = rand.nextInt(10);
 
 				// Compute new position of agent
 				for(int j = 0; j < 10; j++){
 					double uniDistrNumber = 0 + (1 - 0) * rand.nextDouble();
 					if(uniDistrNumber < crossoverRate || j == randomIndex){
-						newPopulation[i][j] = population[randomAgents[0]][j] + differentialRate * (population[randomAgents[1]][j] - population[randomAgents[2]][j]);
+						// base vector
+						if(baseType.equals("best")){
+							int bestAgent = returnBestAgent(fitnessArray);
+							newPopulation[i][j] = population[bestAgent][j];
+						} else {
+							newPopulation[i][j] = population[randomAgents[0]][j];
+						}
+						// pertubation vectors
+						for(int k = 0; k < pertubationSize; k++){
+							newPopulation[i][j] += differentialRate * (population[randomAgents[2*k + 1]][j] - population[randomAgents[2*k + 2]][j]);
+						}	
 					} else {
 						newPopulation[i][j] = population[i][j];
 					}
@@ -122,8 +151,6 @@ public class group02 implements ContestSubmission
 			}
 
 			population = newPopulation;
-
-            // Select survivors
         }
 
 	}
