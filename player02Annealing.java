@@ -57,9 +57,7 @@ public class player02Annealing implements ContestSubmission {
         if(fitnessNeighbour > fitness){
             return 1.0;
         }
-        double result = Math.exp((fitness - fitnessNeighbour) / temperature);
-        //System.out.println(result + " " + fitnessNeighbour + " " + fitness + " " + temperature);
-        return result;
+        return Math.exp((fitness - fitnessNeighbour) / temperature)/10;
     }
 
 	public void run(){
