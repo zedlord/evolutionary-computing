@@ -6,13 +6,13 @@ import java.util.Properties;
 import java.util.HashSet;
 import java.util.Set;
 
-public class player02 implements ContestSubmission
+public class player02Differential implements ContestSubmission
 {
 	Random rand;
 	ContestEvaluation evaluation_;
     private int evaluations_limit_;
 
-	public player02()
+	public player02Differential()
 	{
 		rand = new Random();
 	}

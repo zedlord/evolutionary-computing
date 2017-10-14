@@ -7,12 +7,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.lang.Math;
 
-public class player02-annealing implements ContestSubmission {
+public class player02Annealing implements ContestSubmission {
 	Random rand;
 	ContestEvaluation evaluation_;
     private int evaluations_limit_;
 
-	public player02-annealing()
+	public player02Annealing()
 	{
 		rand = new Random();
 	}
@@ -47,22 +47,27 @@ public class player02-annealing implements ContestSubmission {
     }
 
     public double[] getNeighbour(double[] agent){
-		int position = rand.nextInt(10) + 1;
-		return agent[position] = -5 + (5 - -5) * rand.nextDouble();
+		for(int i = 0; i < 10; i++){
+		    agent[i] = -5 + (5 - -5) * rand.nextDouble();
+        }
+		return agent;
 	}
 
-	public double calculateProbability(double fitnessNeighbour, double fitness, int temperature){
-        return Math.exp((fitnessNeighbour - fitness) / temperature);
+	public double calculateProbability(double fitnessNeighbour, double fitness, double temperature){
+        if(fitnessNeighbour > fitness){
+            return 1.0;
+        }
+        double result = Math.exp((fitness - fitnessNeighbour) / temperature);
+        //System.out.println(result + " " + fitnessNeighbour + " " + fitness + " " + temperature);
+        return result;
     }
 
 	public void run(){
-		int populationSize = 50;
+		int populationSize = 1;
 
 		double[] fitnessArray = new double[populationSize];
-	
+
 		System.out.println("populationSize: " + populationSize);
-		System.out.println("crossoverRate: " + differentialRate);
-		System.out.println("differentialRate: " + crossoverRate);
 		// Run your algorithm here
         int evals = 0;
         // init population
@@ -71,41 +76,24 @@ public class player02-annealing implements ContestSubmission {
 			for(int j = 0; j < 10; j++){
 				population[i][j] = -5 + (5 - -5) * rand.nextDouble();
 			}
-			fitnessArray[i] = 0;
+			fitnessArray[i] = 0.0;
 		}
 
+		double[][] newPopulation = new double[populationSize][10];
         // calculate fitness
         while(evals<evaluations_limit_){
-			int temperature = evaluations_limit_ - evals;
+			double temperature = evaluations_limit_ - evals;
 			// Do annealing for every agent
 			for(int i = 0; i < populationSize; i++){
-				double[] neighbour = getNeighbour(population[i]);
-                Double fitnessNeighbour = (double) evaluation_.evaluate(neighbour);
-                if(fitnessNeighbour > fitnessArray[i]){
-                    newPopulation[i] = fitnessNeighbour;
-                } else {
+                    double[] neighbour = getNeighbour(population[i]);
+                    double fitnessNeighbour = (double) evaluation_.evaluate(neighbour);
+                    evals++;
                     double probability = calculateProbability(fitnessNeighbour, fitnessArray[i], temperature);
-                    if( Math.random() < probability){
-                        newPopulation[i] = fitnessNeighbour;
+                    if( probability > Math.random()){
+                        newPopulation[i] = neighbour;
+                        fitnessArray[i] = fitnessNeighbour;
                     }
-                }
 			}
-
-			//Eval new population
-			for(int i = 0; i < populationSize; i++){
-				Double fitnessNew = (double) evaluation_.evaluate(newPopulation[i]);
-				evals++;
-
-				if(fitnessNew < fitnessArray[i]){
-					//Keep old agent
-					newPopulation[i] = population[i];
-				} else {
-					fitnessArray[i] = fitnessNew;
-				}
-			}
-
-			population = newPopulation;
-
             // Select survivors
         }
 
