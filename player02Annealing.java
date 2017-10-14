@@ -5,14 +5,14 @@ import java.util.Random;
 import java.util.Properties;
 import java.util.HashSet;
 import java.util.Set;
+import java.lang.Math;
 
-public class group02 implements ContestSubmission
-{
+public class player02-annealing implements ContestSubmission {
 	Random rand;
 	ContestEvaluation evaluation_;
     private int evaluations_limit_;
 
-	public group02()
+	public player02-annealing()
 	{
 		rand = new Random();
 	}
@@ -46,29 +46,17 @@ public class group02 implements ContestSubmission
         }
     }
 
-    private int[] chooseRandomAgents(int pSize, int agentExclude){
-		
-		int[] randomAgents = new int[3];
-		Set<Integer> set = new HashSet<Integer>();
-
-		set.add(agentExclude);
-		while (set.size() < 4){
-			set.add(rand.nextInt(pSize));
-		}
-		set.remove(agentExclude);
-
-		int i = 0;
-		for (Integer val : set) randomAgents[i++] = val;
-
-		return randomAgents;
+    public double[] getNeighbour(double[] agent){
+		int position = rand.nextInt(10) + 1;
+		return agent[position] = -5 + (5 - -5) * rand.nextDouble();
 	}
 
-	public void run()
-	{
+	public double calculateProbability(double fitnessNeighbour, double fitness, int temperature){
+        return Math.exp((fitnessNeighbour - fitness) / temperature);
+    }
 
-		double crossoverRate = 0.5;
-		double differentialRate = 1.0;
-		int populationSize = 10;
+	public void run(){
+		int populationSize = 50;
 
 		double[] fitnessArray = new double[populationSize];
 	
@@ -83,29 +71,24 @@ public class group02 implements ContestSubmission
 			for(int j = 0; j < 10; j++){
 				population[i][j] = -5 + (5 - -5) * rand.nextDouble();
 			}
+			fitnessArray[i] = 0;
 		}
 
         // calculate fitness
         while(evals<evaluations_limit_){
-
-			double[][] newPopulation = new double[populationSize][10];
-			//Loop through all agents
+			int temperature = evaluations_limit_ - evals;
+			// Do annealing for every agent
 			for(int i = 0; i < populationSize; i++){
-
-				//Create array to choose 3 random agents from the population
-				int[] randomAgents = chooseRandomAgents(populationSize, i);
-				int randomIndex = rand.nextInt(10);
-
-				// Compute new position of agent
-				for(int j = 0; j < 10; j++){
-					double uniDistrNumber = 0 + (1 - 0) * rand.nextDouble();
-					if(uniDistrNumber < crossoverRate || j == randomIndex){
-						newPopulation[i][j] = population[randomAgents[0]][j] + differentialRate * (population[randomAgents[1]][j] - population[randomAgents[2]][j]);
-					} else {
-						newPopulation[i][j] = population[i][j];
-					}
-				}
-
+				double[] neighbour = getNeighbour(population[i]);
+                Double fitnessNeighbour = (double) evaluation_.evaluate(neighbour);
+                if(fitnessNeighbour > fitnessArray[i]){
+                    newPopulation[i] = fitnessNeighbour;
+                } else {
+                    double probability = calculateProbability(fitnessNeighbour, fitnessArray[i], temperature);
+                    if( Math.random() < probability){
+                        newPopulation[i] = fitnessNeighbour;
+                    }
+                }
 			}
 
 			//Eval new population
