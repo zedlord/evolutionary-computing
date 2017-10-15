@@ -47,29 +47,37 @@ public class player02Annealing implements ContestSubmission {
     }
 
     public double[] getNeighbour(double[] agent){
-		for(int i = 0; i < 10; i++){
-		    agent[i] = -5 + (5 - -5) * rand.nextDouble();
-        }
+
+    	int randomDimension = rand.nextInt(10);
+    	agent[randomDimension] =  -5 + (5 - -5) * rand.nextDouble();
+
 		return agent;
 	}
 
 	public double calculateProbability(double fitnessNeighbour, double fitness, double temperature){
-        if(fitnessNeighbour > fitness){
+        if(fitnessNeighbour < fitness){
             return 1.0;
+        } else {
+        	return Math.exp(-(fitnessNeighbour - fitness) / temperature);	
         }
-        return Math.exp((fitness - fitnessNeighbour) / temperature)/10;
     }
 
 	public void run(){
-		int populationSize = 1;
 
-		double[] fitnessArray = new double[populationSize];
+		// parameters
+		int populationSize = 1;
+		double endTemp = 1;
+		// double cooling = Math.pow(initTemp, (-populationSize/ evaluations_limit_));
+		double cooling =  0.99;
+		double temperature = Math.pow(cooling, (-evaluations_limit_ / populationSize));
 
 		System.out.println("populationSize: " + populationSize);
+
 		// Run your algorithm here
         int evals = 0;
         // init population
 		double[][] population = new double[populationSize][10];
+		double[] fitnessArray = new double[populationSize];
 		for(int i = 0; i < populationSize; i++){
 			for(int j = 0; j < 10; j++){
 				population[i][j] = -5 + (5 - -5) * rand.nextDouble();
@@ -78,22 +86,29 @@ public class player02Annealing implements ContestSubmission {
 		}
 
 		double[][] newPopulation = new double[populationSize][10];
+
         // calculate fitness
-        while(evals<evaluations_limit_){
-			double temperature = evaluations_limit_ - evals;
+        while(evals + populationSize <= evaluations_limit_){
+
+			// double temperature = evaluations_limit_ - evals;
+			temperature *= cooling;
+
 			// Do annealing for every agent
 			for(int i = 0; i < populationSize; i++){
                     double[] neighbour = getNeighbour(population[i]);
                     double fitnessNeighbour = (double) evaluation_.evaluate(neighbour);
                     evals++;
                     double probability = calculateProbability(fitnessNeighbour, fitnessArray[i], temperature);
+                    
+                    System.out.println(probability);
+                    //System.out.println(fitnessNeighbour - fitnessArray[i]);
+                    // System.out.println(probability + " " + temperature);
+
                     if( probability > Math.random()){
-                        newPopulation[i] = neighbour;
+                        population[i] = neighbour;
                         fitnessArray[i] = fitnessNeighbour;
                     }
 			}
-            // Select survivors
         }
-
 	}
 }

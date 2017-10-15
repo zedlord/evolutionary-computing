@@ -48,22 +48,20 @@ public class player02Differential implements ContestSubmission
 
     private int[] chooseRandomAgents(int pSize, int agentExclude, int pertubationSize){
 		
-<<<<<<< HEAD:player02Differential.java
-		int[] randomAgents = new int[10];
-=======
 		int[] randomAgents = new int[2*pertubationSize + 1];
->>>>>>> 50008a72806eb4908284352360720a9374b68f88:group02.java
 		Set<Integer> set = new HashSet<Integer>();
 
 		set.add(agentExclude);
-		while (set.size() < 11){
+		while (set.size() < (2*pertubationSize + 1)){
 			set.add(rand.nextInt(pSize));
 		}
 		set.remove(agentExclude);
 
 		int i = 0;
-		for (Integer val : set) randomAgents[i++] = val;
-
+		for (Integer val : set){
+			randomAgents[i++] = val;
+			
+		}
 		return randomAgents;
 	}
 
@@ -84,22 +82,23 @@ public class player02Differential implements ContestSubmission
 	public void run()
 	{
 		// parameters
-		double crossoverRate = 0.5;
-<<<<<<< HEAD:player02Differential.java
-		double differentialRate = 1.0;
-		int populationSize = 50;
-=======
-		double differentialRate = 1;
-		int populationSize = 10;
-		int pertubationSize = 2; // in {1,2,..., populationSize/2 - 1}
-		String baseType = "rand"; // "best" or "rand"
->>>>>>> 50008a72806eb4908284352360720a9374b68f88:group02.java
+		// double crossoverRate = 0.5;
+		// double differentialRate = 0.69;
+		// int populationSize = 20;
+		// int pertubationSize = 2; // in {1,2,..., populationSize/2 - 1}
+		// Boolean bestBase = false; // otherwise best
+
+		double crossoverRate = rand.nextDouble(); // min 0 max 1
+		double differentialRate = 2 * rand.nextDouble(); // min 0, max 2
+		int populationSize = 4 + rand.nextInt(47); // min 4, max?
+		int pertubationSize = 1 + rand.nextInt(Math.min(3, (populationSize-1)/2));
+		Boolean bestBase = false; // of rand.nextBoolean(), maar werkt slecht.
 
 		System.out.println("populationSize: " + populationSize);
 		System.out.println("crossoverRate: " + differentialRate);
 		System.out.println("differentialRate: " + crossoverRate);
 		System.out.println("pertubationSize: " + pertubationSize);
-		System.out.println("baseType" + baseType);
+		System.out.println("bestBase: " + bestBase);
 		
 		// Run your algorithm here
         int evals = 0;
@@ -114,19 +113,14 @@ public class player02Differential implements ContestSubmission
 		}
 
         // calculate fitness
-        while(evals<evaluations_limit_){
+        while(evals + populationSize <evaluations_limit_){
 
 			double[][] newPopulation = new double[populationSize][10];
 			//Loop through all agents
 			for(int i = 0; i < populationSize; i++){
 
-<<<<<<< HEAD:player02Differential.java
-				//Create array to choose 3 (now 10) random agents from the population
-				int[] randomAgents = chooseRandomAgents(populationSize, i);
-=======
 				//Create array to choose random agents from the population
 				int[] randomAgents = chooseRandomAgents(populationSize, i, pertubationSize);
->>>>>>> 50008a72806eb4908284352360720a9374b68f88:group02.java
 				int randomIndex = rand.nextInt(10);
 
 				// Compute new position of agent
@@ -134,7 +128,7 @@ public class player02Differential implements ContestSubmission
 					double uniDistrNumber = 0 + (1 - 0) * rand.nextDouble();
 					if(uniDistrNumber < crossoverRate || j == randomIndex){
 						// base vector
-						if(baseType.equals("best")){
+						if(bestBase){
 							int bestAgent = returnBestAgent(fitnessArray);
 							newPopulation[i][j] = population[bestAgent][j];
 						} else {
@@ -148,7 +142,6 @@ public class player02Differential implements ContestSubmission
 						newPopulation[i][j] = population[i][j];
 					}
 				}
-
 			}
 
 			//Eval new population
