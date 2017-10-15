@@ -1,0 +1,20 @@
+BentCigarFunction 
+0.8,5.0,5.0,200,0.2,mirror,0.15
+Score: 8.535167994944493
+Runtime: 1082ms
+0.8,5.0,5.0,200,0.2,mirror,0.15
+Score: 8.756469782681128
+Runtime: 955ms
+0.8,5.0,5.0,200,0.2,mirror,0.15
+Score: 8.100720624868778
+Runtime: 967ms
+SchaffersEvaluation 
+0.8,5.0,5.0,200,0.2,mirror,0.15
+Score: 0.17385209390065443
+Runtime: 3389ms
+0.8,5.0,5.0,200,0.2,mirror,0.15
+Score: 0.839247875719521
+Runtime: 3524ms
+0.8,5.0,5.0,200,0.2,mirror,0.15
+Score: 6.222710487614183
+Runtime: 3375ms
