@@ -70,13 +70,14 @@ public class player02Particle implements ContestSubmission
 		double[] globalBestPosition = new double[10];
 		double globalBestFitness = 0.0;
 
-		System.out.println("weightCurrent: " + weightCurrent);
+		System.out.println(weightCurrent+","+weightIndividual+","+weightSocial+","+populationSize+","+velocityMax+","+boundMethod+","+friction);
+		/*System.out.println("weightCurrent: " + weightCurrent);
 		System.out.println("weightIndividual: " + weightIndividual);
 		System.out.println("weightSocial: " + weightSocial);
 		System.out.println("populationSize: " + populationSize);
 		System.out.println("velocityMax: " + velocityMax);
 		System.out.println("boundMethod: " + boundMethod);
-		System.out.println("friction: " + friction);
+		System.out.println("friction: " + friction);*/
 
 		// Run your algorithm here
         int evals = 0;
