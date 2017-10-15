@@ -51,13 +51,13 @@ public class player02Particle implements ContestSubmission
 	{
 
 		// Set parameters
-		double weightCurrent = 1;
-		double weightIndividual = 2;
+		double weightCurrent = 0.8;
+		double weightIndividual = 5;
 		double weightSocial = weightIndividual;
-		int populationSize = 20;
-		double velocityMax = 10;
+		int populationSize = 200;
+		double velocityMax = 0.2;
 		String boundMethod = "mirror"; // mirror or loop
-		double friction = 0.5; // 0 < friction < 1
+		double friction = 0.15; // 0 < friction < 1
 
 		// Init population arrays
 		double[][] population = new double[populationSize][10];
@@ -107,7 +107,7 @@ public class player02Particle implements ContestSubmission
 		}
 
         // calculate fitness
-        while(evals<evaluations_limit_){
+        while(evals+populationSize<evaluations_limit_){
 			//Loop through all agents
 			for(int i = 0; i < populationSize; i++){
 				// Compute new position of agent
