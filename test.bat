@@ -1,8 +1,16 @@
-echo BentCigarFunction >>output.txt
-FOR /l %%A IN (1,1,3) DO (
-    java -jar testrun.jar -submission=player02Particle -evaluation=BentCigarFunction -seed=%%A >>output.txt
+echo BentCigarFunction >>BentCigar.txt
+FOR /l %%A IN (1,1,20) DO (
+    echo %%A>>BentCigar.txt
+    FOR /l %%B IN (1,1,20) DO (
+        java -jar testrun.jar -submission=player02Tournament -evaluation=BentCigarFunction -seed=%%A >>BentCigar.txt
+    )
 )
-echo SchaffersEvaluation >>output.txt
-FOR /l %%A IN (1,1,3) DO (
-    java -jar testrun.jar -submission=player02Particle -evaluation=SchaffersEvaluation -seed=%%A >>output.txt
+
+echo SchaffersEvaluation >>Schaffers.txt
+FOR /l %%A IN (1,1,20) DO (
+    SET seed=%%A
+    echo %seed% >>BentCigar.txt
+    FOR /l %%B IN (1,1,20) DO (
+        java -jar testrun.jar -submission=player02Tournament -evaluation=SchaffersEvaluation -seed=%%A >>Schaffers.txt
+    )
 )

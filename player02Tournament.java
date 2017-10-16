@@ -87,10 +87,11 @@ public class player02Tournament implements ContestSubmission {
 		// int selectionRate = 7;
 
 		// random parameters;
-		int populationSize = 1 + rand.nextInt(200); // min 1?, max ? 
-		int tournamentSize = 1 + rand.nextInt(populationSize); // min 1, max populationSize
-		int tournamentWinners = 1 + rand.nextInt(tournamentSize); // min 1, max tournamentSize
-		double selectionRate = 1 + 9 * rand.nextDouble(); // rate = mu/lambda, lecture notes: good around 3-7.
+        Random randParameters = new Random();
+		int populationSize = 1 + randParameters.nextInt(250);// min 1?, max ?
+		int tournamentSize = 1 + randParameters.nextInt(populationSize); // min 1, max populationSize
+		int tournamentWinners = 1 + randParameters.nextInt(tournamentSize); // min 1, max tournamentSize
+		double selectionRate = 1 + 9 * randParameters.nextDouble(); // rate = mu/lambda, lecture notes: good around 3-7.
 
 		// Compute other variables
 		int parentSizeMin = (int) selectionRate*populationSize; // lambda

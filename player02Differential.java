@@ -88,10 +88,11 @@ public class player02Differential implements ContestSubmission
 		// int pertubationSize = 2; // in {1,2,..., populationSize/2 - 1}
 		// Boolean bestBase = false; // otherwise best
 
-		double crossoverRate = rand.nextDouble(); // min 0 max 1
-		double differentialRate = 2 * rand.nextDouble(); // min 0, max 2
-		int populationSize = 4 + rand.nextInt(47); // min 4, max?
-		int pertubationSize = 1 + rand.nextInt(Math.min(3, (populationSize-1)/2));
+        Random randParameters = new Random();
+		double crossoverRate = randParameters.nextDouble(); // min 0 max 1
+		double differentialRate = 2 * randParameters.nextDouble(); // min 0, max 2
+		int populationSize = 4 + randParameters.nextInt(47); // min 4, max?
+		int pertubationSize = 1 + randParameters.nextInt(Math.min(3, (populationSize-1)/2));
 		Boolean bestBase = false; // of rand.nextBoolean(), maar werkt slecht.
 
 		System.out.println("populationSize: " + populationSize);

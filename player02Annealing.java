@@ -65,10 +65,11 @@ public class player02Annealing implements ContestSubmission {
 	public void run(){
 
 		// parameters
-		int populationSize = 1;
-		double endTemp = 1;
+        Random randParameters = new Random();
+		int populationSize = randParameters.nextInt(200);
+		double endTemp = randParameters.nextInt(10);
 		// double cooling = Math.pow(initTemp, (-populationSize/ evaluations_limit_));
-		double cooling =  0.99;
+		double cooling =  randParameters.nextDouble(5);
 		double temperature = Math.pow(cooling, (-evaluations_limit_ / populationSize));
 
 		System.out.println("populationSize: " + populationSize);
