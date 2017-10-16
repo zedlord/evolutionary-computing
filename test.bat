@@ -9,7 +9,7 @@ FOR /l %%A IN (1,1,20) DO (
 echo SchaffersEvaluation >>Schaffers.txt
 FOR /l %%A IN (1,1,20) DO (
     SET seed=%%A
-    echo %seed% >>BentCigar.txt
+    echo %seed% >>Schaffers.txt
     FOR /l %%B IN (1,1,20) DO (
         java -jar testrun.jar -submission=player02Tournament -evaluation=SchaffersEvaluation -seed=%%A >>Schaffers.txt
     )
